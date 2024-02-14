@@ -11,9 +11,9 @@ class waiverButton(discord.ui.View):
         
         self.users = getdata.users.read_info()
         self.games = getdata.Fetch('./cogs/data/games.json').read_info()
-        #if self.games[self.users[str(ctx.user.id)]['game']]['players'][0] == ctx.user.id:
-        #    await ctx.response.send_message("You are the one who started this game, you can't sign the waiver.", ephemeral=True)
-        #    return
+        if self.games[self.users[str(ctx.user.id)]['game']]['players'][0] == ctx.user.id:
+            await ctx.response.send_message("You are the one who started this game, you can't sign the waiver.", ephemeral=True)
+            return
 
         if self.games[self.users[str(ctx.user.id)]['game']]['started'] == True:
             return
