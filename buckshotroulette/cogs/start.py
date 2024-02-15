@@ -6,6 +6,21 @@ import cogs.gameloop as gameloop
 
 class waiverButton(discord.ui.View):
 
+    async def on_timeout(self):
+        self.users = getdata.users.read_info()
+        self.games = getdata.Fetch('./cogs/data/games.json').read_info()
+        self.uid = str(self.message.interaction.user.id)
+
+        del self.games[self.users[self.uid]['game']]
+
+        self.disable_all_items()
+        await self.message.edit(embed=discord.Embed(
+            title="Waiver timeout",
+            description="Your waiver has timed out"
+        ))
+        getdata.users.update_info(self.users)
+        getdata.Fetch('./cogs/data/games.json').update_info(self.games)
+
     @discord.ui.button(label="Sign waiver", style=discord.ButtonStyle.grey, emoji="📝")
     async def sign_waiver(self, button, ctx):
         
@@ -100,7 +115,7 @@ class start(commands.Cog):
             color=discord.Colour.from_rgb(54, 36, 15)
         )
         #embed.set_footer(text='React to this message to sign the waiver and start the game!')
-        await ctx.respond(embed=embed, view=waiverButton())
+        await ctx.respond(embed=embed, view=waiverButton(timeout=60))
 
         getdata.Fetch('./cogs/data/games.json').update_info(self.games)
         getdata.Fetch('./cogs/data/users.json').update_info(self.users)

@@ -1,33 +1,6 @@
 {
-    "676832429167738914": {
-        "game": "0",
-        "lives": 6,
-        "maxlives": 6,
-        "wins": 0,
-        "losses": 0,
-        "items": [],
-        "cuffed": 0
-    },
     "589489342234492928": {
-        "game": "0",
-        "lives": 6,
-        "maxlives": 6,
-        "wins": 0,
-        "losses": 0,
-        "items": [],
-        "cuffed": 0
-    },
-    "690193396740259961": {
-        "game": "0",
-        "lives": 6,
-        "maxlives": 6,
-        "wins": 0,
-        "losses": 0,
-        "items": [],
-        "cuffed": 0
-    },
-    "859458385819729921": {
-        "game": "0",
+        "game": "1",
         "lives": 6,
         "maxlives": 6,
         "wins": 0,
@@ -36,7 +9,7 @@
         "cuffed": 0
     },
     "669091977949741077": {
-        "game": "0",
+        "game": "1",
         "lives": 6,
         "maxlives": 6,
         "wins": 0,
@@ -45,15 +18,6 @@
         "cuffed": 0
     },
     "716390085896962058": {
-        "game": "0",
-        "lives": 6,
-        "maxlives": 6,
-        "wins": 0,
-        "losses": 0,
-        "items": [],
-        "cuffed": 0
-    },
-    "874910942490677270": {
         "game": "0",
         "lives": 6,
         "maxlives": 6,

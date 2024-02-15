@@ -3,6 +3,7 @@ from discord.ext import commands
 from main import client as bot
 import cogs.getdata as getdata
 import random
+import cogs.gameloop as gameloop
 
 use = bot.create_group('use', 'Use Items')
 
@@ -101,10 +102,26 @@ class items(commands.Cog):
             await ctx.respond('You do not have this item.', ephemeral=True)
             return
 
-        if game['current'] == 'blank':
+        if game['current'] == 'blank': # decreasing the current shell by one
             game['blanks'] -= 1
-        else:
+        else: # if it is live
             game['live'] -= 1
+
+
+        if game['blanks'] <= 0 and game['live'] <= 0: # if it was the last bullet in the gun
+            await ctx.respond(f"You chug a can of beer and eject a {game['current']} shell from the shotgun. It's the last bullet, so the shells are reloaded in a new turn.")
+            
+            for a in range(0, len(users[str(ctx.user.id)]['items'])):
+                if users[str(ctx.user.id)]['items'][a] == 2:
+                    users[str(ctx.user.id)]['items'].pop(a)
+                    break
+
+            games[users[str(ctx.user.id)]['game']] = game
+            getdata.Fetch('./cogs/data/users.json').update_info(users)
+            getdata.Fetch('./cogs/data/games.json').update_info(games)  
+            await gameloop.gameloop(ctx) # new turn starts
+            return
+
 
         await ctx.respond(f'You chug a can of beer and eject a {game["current"]} shell from the shotgun.')
 

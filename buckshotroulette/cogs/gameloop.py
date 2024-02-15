@@ -120,7 +120,7 @@ class gameloop(commands.Cog):
 {itemstringopp}""",
             colour=discord.Color.from_rgb(54, 36, 15)
         )
-        embed.set_footer(text="Use `/help` to figure out how to actually play.")
+        embed.set_footer(text="Use /help to figure out how to actually play.")
         embed.set_thumbnail(url="https://static.wikia.nocookie.net/villains/images/4/4e/The_Dealer_%28Buckshot_Roulette%29.png/revision/latest/scale-to-width-down/250?cb=20231230210541")
         
         try:

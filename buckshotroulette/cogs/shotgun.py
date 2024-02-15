@@ -12,7 +12,7 @@ class shotgun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @shoot.command(name='self')
+    @shoot.command(name='self', description="Shotgun to chin. Get lucky or say goodnight.")
     async def attemptedsuicide(ctx):
         try:
 
@@ -37,6 +37,18 @@ class shotgun(commands.Cog):
                 await ctx.send("*Click*, it was a blank, you're safe for now")
                 game['blanks'] -= 1
                 game['sawedoff'] = False
+
+                if users[oppid]['cuffed'] == 0:
+                    game['turn'] = game['players'].index(int(oppid))
+                    game['fullturn'] += 1
+                elif users[oppid]['cuffed'] == 1:
+                    users[oppid]['cuffed'] = 2
+                    await ctx.send(f"<@{oppid}> can't move due to the handcuffs, another turn for <@{uid}>.")
+                elif users[oppid]['cuffed'] == 2:
+                    users[oppid]['cuffed'] = 0
+                    await ctx.send(f"<@{oppid}> broke out of their handcuffs, they can play on now.")
+                    game['turn'] = game['players'].index(int(oppid))
+                    game['fullturn'] += 1
 
                 games[users[uid]['game']] = game
                 getdata.Fetch('./cogs/data/games.json').update_info(games)
@@ -90,6 +102,20 @@ class shotgun(commands.Cog):
                     game['live'] -= 1
                     games[users[uid]['game']] = game
 
+                    if users[oppid]['cuffed'] == 0:
+                        game['turn'] = game['players'].index(int(oppid))
+                        game['fullturn'] += 1
+                    elif users[oppid]['cuffed'] == 1:
+                        users[oppid]['cuffed'] = 2
+                        await ctx.send(f"<@{oppid}> can't move due to the handcuffs, another turn for <@{uid}>.")
+                    elif users[oppid]['cuffed'] == 2:
+                        users[oppid]['cuffed'] = 0
+                        await ctx.send(f"<@{oppid}> broke out of their handcuffs, they can play on now.")
+                        game['turn'] = game['players'].index(int(oppid))
+                        game['fullturn'] += 1
+
+                    games[users[uid]['game']] = game
+
                     getdata.Fetch('./cogs/data/users.json').update_info(users)
                     getdata.Fetch('./cogs/data/games.json').update_info(games)
 
@@ -106,7 +132,7 @@ class shotgun(commands.Cog):
         except IndexError:
             await ctx.respond("An error occured, maybe you aren't in a game?", ephemeral=True)
     
-    @shoot.command()
+    @shoot.command(description="Shoot your opponent. Hope it's not a blank")
     async def opponent(ctx):
         try:
 
@@ -145,6 +171,8 @@ class shotgun(commands.Cog):
                     await ctx.send(f"<@{oppid}> broke out of their handcuffs, they can play on now.")
                     game['turn'] = game['players'].index(int(oppid))
                     game['fullturn'] += 1
+
+                games[users[uid]['game']] = game
 
                 getdata.Fetch('./cogs/data/games.json').update_info(games)
                 await gameloop.gameloop.turn(ctx)
@@ -226,11 +254,13 @@ class shotgun(commands.Cog):
         except IndexError:
             await ctx.respond("An error occured, maybe you aren't in a game?", ephemeral=True)
 
-    @end.command()
+    @end.command(description="End the current game")
     async def game(ctx):
-        await shotgun.endgame(ctx)
-        await ctx.respond("Game ended, stats restored, better luck next time.")
-
+        try:
+           await shotgun.endgame(ctx)
+           await ctx.respond("Game ended, stats restored, better luck next time.")
+        except KeyError:
+            await ctx.respond("You aren't in a game.", ephemeral=True)
 
     async def endgame(ctx):
         users = getdata.Fetch('./cogs/data/users.json').read_info()
